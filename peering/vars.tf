@@ -1,0 +1,4 @@
+variable "vpc" {
+  type = "map"
+
+}
