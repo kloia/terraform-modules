@@ -103,7 +103,6 @@ resource "aws_vpc_peering_connection_accepter" "accepter" {
   provider                  = "aws.accepter"
   vpc_peering_connection_id = "${join("", aws_vpc_peering_connection.requester.*.id)}"
   auto_accept               = "${var.auto_accept}"
-  tags                      = "${module.accepter.tags}"
 }
 
 resource "aws_vpc_peering_connection_options" "accepter" {
