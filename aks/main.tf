@@ -20,6 +20,9 @@ resource "azurerm_kubernetes_cluster" "k8s" {
         vm_size         = "${var.aks["vm_size"]}"
         os_type         = "${var.aks["os"]}"
         os_disk_size_gb = "${var.aks["disk_size"]}"
+        os_disk_size_gb = "${var.aks["disk_size"]}"
+        type            = "${var.aks["type"]}"
+
         ## subnet tests
         vnet_subnet_id = "${var.aks["subnet_id"]}"
 
