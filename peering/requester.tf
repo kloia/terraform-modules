@@ -96,6 +96,7 @@ resource "aws_vpc_peering_connection_options" "requester" {
   requester {
     allow_remote_vpc_dns_resolution = "${var.requester_allow_remote_vpc_dns_resolution}"
   }
+  depends_on = ["aws_vpc_peering_connection.requester.*.id"]
 }
 
 locals {
