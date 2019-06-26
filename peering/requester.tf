@@ -83,7 +83,7 @@ resource "aws_vpc_peering_connection" "requester" {
   peer_vpc_id   = "${local.accepter_vpc_id}"
   peer_owner_id = "${local.accepter_account_id}"
   peer_region   = "${local.accepter_region}"
-  auto_accept   = false
+  auto_accept   = true
 }
 
 resource "aws_vpc_peering_connection_options" "requester" {
@@ -96,7 +96,18 @@ resource "aws_vpc_peering_connection_options" "requester" {
   requester {
     allow_remote_vpc_dns_resolution = "${var.requester_allow_remote_vpc_dns_resolution}"
   }
-  depends_on = ["aws_vpc_peering_connection.requester.*.id"]
+  depends_on = ["aws_vpc_peering_connection.requester.*.id", "null_resource.delay_request"]
+}
+
+
+
+resource "null_resource" "delay_request" {
+  provisioner "local-exec" {
+    command = "sleep 10"
+  }
+  triggers = {
+    "before" = "${aws_vpc_peering_connection_options.requester.id}"
+  }
 }
 
 locals {
