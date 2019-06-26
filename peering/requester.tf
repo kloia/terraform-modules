@@ -83,7 +83,7 @@ resource "aws_vpc_peering_connection" "requester" {
   peer_vpc_id   = "${local.accepter_vpc_id}"
   peer_owner_id = "${local.accepter_account_id}"
   peer_region   = "${local.accepter_region}"
-  auto_accept   = true
+  auto_accept   = false
 }
 
 resource "aws_vpc_peering_connection_options" "requester" {
