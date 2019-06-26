@@ -112,7 +112,7 @@ resource "aws_vpc_peering_connection_options" "accepter" {
   accepter {
     allow_remote_vpc_dns_resolution = "${var.accepter_allow_remote_vpc_dns_resolution}"
   }
-  depends_on = ["aws_vpc_peering_connection.requester.*.id", "null_resource.delay"]
+  depends_on = ["null_resource.delay"]
 }
 
 ####
