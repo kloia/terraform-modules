@@ -96,17 +96,17 @@ resource "aws_vpc_peering_connection_options" "requester" {
   requester {
     allow_remote_vpc_dns_resolution = "${var.requester_allow_remote_vpc_dns_resolution}"
   }
-  depends_on = ["null_resource.delay_request"] 
+  depends_on = ["null_resource.delay_requester"] 
 }
 
 
 
-resource "null_resource" "delay_request" {
+resource "null_resource" "delay_requester" {
   provisioner "local-exec" {
     command = "sleep 10"
   }
   triggers = {
-    "before" = "${aws_vpc_peering_connection_options.requester.id}"
+    "before" = "${aws_vpc_peering_connection.requester.id}"
   }
 }
 
