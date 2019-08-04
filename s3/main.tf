@@ -1,4 +1,5 @@
 resource "aws_s3_bucket" "b_lifecyle" {
+
   bucket = "${var.name}"
   acl    = "${var.acl}"
 
