@@ -2,7 +2,7 @@ resource "aws_s3_bucket" "b_lifecyle" {
   bucket = "${var.name}"
   acl    = "${var.acl}"
 
-  tags {
+  tags = {
           Name = "${var.tag_name}"
           Deployment = "${var.tag_deployment}"
           KubernetesCluster = "${var.tag_kubernetes_cluster}"
