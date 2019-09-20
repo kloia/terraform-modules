@@ -64,3 +64,40 @@ variable "kms_key_id" {
 variable "storage_encrypted" {
   
 }
+
+
+variable "db_param_group" {
+  
+}
+variable "multi_az" {
+  
+}
+
+
+variable "port" {
+  
+}
+
+variable "engine_version" {
+  
+}
+
+variable "storage_type" {
+  
+}
+
+variable "engine" {
+  
+}
+
+variable "db_name" {
+  
+}
+
+variable "allocated_storage" {
+  
+}
+
+variable "auto_minor_version_upgrade" {
+  
+}
