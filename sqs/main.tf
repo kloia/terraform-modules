@@ -12,7 +12,6 @@ module "global"  {
   tag_organisation =  "${var.tag_organisation}"
   tag_project = "${var.tag_project}"
   tag_deployment_code =  "${var.tag_deployment_code}"
-
 }
 
 resource "aws_sqs_queue" "queue" {

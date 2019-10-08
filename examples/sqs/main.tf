@@ -1,7 +1,7 @@
 
 
 module "my_sqs" {
-    source = "../../sqs"
+    source = "git::https://github.com/kloia/terraform-modules//sqs?ref=v0.0.15sqs"
     queue_names = ["q1", "q2", "q3"]
     tag_name = "tag"
     tag_deployment ="deployment"
