@@ -10,3 +10,4 @@ output "global"  {
 
     }
 }
+

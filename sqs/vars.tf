@@ -1,9 +1,12 @@
-variable "aws" {
-  type = "map"
-  default = {
-    "region" = "us-east-2"
-    "accountId" = "554851220515"
-  }
+variable "aws_accountId" {
+}
+
+variable "aws_region" {
+
+}
+
+variable "create_dead_letter" {
+  default = true
 }
 
 variable "queue_names" {
