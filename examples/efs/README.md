@@ -5,10 +5,10 @@ You can provision your own EFS stack .
 ## Supported Resources : 
 * EFS 
 
-You can check the vpc module from <a href="/main.tf"></a> . That is the simple usage of efs module .
+You can check the efs module from <a href="/main.tf"></a> . That is the simple usage of efs module .
 
 
-```
+```terraform
 module "efs" {
     source = "git::https://github.com/kloia/terraform-modules//efs"
     vpc_id = "vpc-AAAAA"

@@ -11,7 +11,7 @@ Usage of the ACM module . You can make validation optionally <b>DNS</b> or <b>e-
 
 ### Usage of the ACM module : 
 
-```
+```terraform
     module "my_acm" {
         source = "../../acm"
         domain_name = "*.elespanyol.online."

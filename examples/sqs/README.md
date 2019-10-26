@@ -10,7 +10,7 @@ You can check the route53 module from <a href="/main.tf"></a> . That is the simp
 
 Notice : This module is importing global-value and mapping modules on itself for generate the sqs queue config values . 
 
-```
+```terraform
 module "my_sqs" {
     source = "git::https://github.com/kloia/terraform-modules//sqs-direct"
     queue_names = ["queue-name-1", "queue-name-2", "queue-name-3"]

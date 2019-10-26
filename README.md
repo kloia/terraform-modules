@@ -4,7 +4,6 @@ Terraform modules designed for provision resources on amazon web services . Our 
 
 You can check the module usage and implementation on <a href="./examples">examples<a> directory that containing example usage of the modules . 
 
-
 ### Modules 
 
 *  <a href="./vpc">VPC<a> 
@@ -30,5 +29,5 @@ For example recently we have Sqs module and working on the `v0.0.15sqs-bugfix` r
 
 ### Contribution 
 
-You can fork the repository and contrib repo via pull-requests . Never hesitate and Community UP ::smile::
+You can fork the repository and contrib repo via pull-requests . Never hesitate and Community UP :smile: :heart:
 

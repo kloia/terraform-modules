@@ -12,7 +12,7 @@ You can check the route53 module from <a href="/main.tf"></a> . That is the simp
 
 ### Hosted Zone : 
 
-```
+```terraform
 module "route53-k8s" {
   source = "git::https://github.com/kloia/terraform-modules.git//route53?ref=v0.0.1"
   domain = "${var.route53_domain}"
@@ -26,7 +26,7 @@ For manage and customize your CNAME records you must define `record_cname` value
 
 You can define <b>A</b>,<b>MX</b>, <b>AAA</b> .. etc records to your domain and define multiple value for records define a list of values to the `records` key . 
 
-```
+```terraform
 module "my_route53" {
   source = "../../route53"
   domain = "mydomain.online"
