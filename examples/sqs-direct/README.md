@@ -1,4 +1,4 @@
-# terraform-vpc-module
+# terraform-sqs-direct-module
 
 You can provision your own sqs stack . SQS-Direct module is creating sqs queues without dead-letter-queue option
 
