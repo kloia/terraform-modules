@@ -43,6 +43,9 @@ if `is_enabled` value is true, that create and enable lifescycle rules . LifeCyc
   </tr>
 </table>
 
+
+Terraform module implementation :
+
 ```terraform
 
 module "my_s3_bucket" {

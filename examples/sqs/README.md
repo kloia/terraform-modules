@@ -6,7 +6,7 @@ You can provision your own sqs stack . SQS module is creating sqs queues with de
 * SQS queue
 * SQS dead-letter-queue 
 
-You can check the vpc module from <a href="/main.tf"></a> . That is the simple usage of sqs module .
+You can check the route53 module from <a href="/main.tf"></a> . That is the simple usage of sqs module .
 
 Notice : This module is importing global-value and mapping modules on itself for generate the sqs queue config values . 
 
