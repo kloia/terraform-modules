@@ -7,8 +7,8 @@ module "my_elasticsearch" {
     ebs_enabled = true
     ebs_volume_size = 20
     ebs_volume_type = "gp2"
-    vpc_id = "vpc-ee4d9586"
-    private_subnets = ["subnet-bbacf1f6"]
-    ingress_allow_cidr_blocks = ["172.31.32.0/20"]
+    vpc_id = "vpc-VVVVVV"
+    private_subnets = ["subnet-MYSUBNET"]
+    ingress_allow_cidr_blocks = ["CIDR_BLOCK"]
 
 }
