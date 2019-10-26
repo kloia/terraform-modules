@@ -24,7 +24,7 @@ module "route53-k8s" {
 
 For manage and customize your CNAME records you must define `record_cname` value as 1 for define the count of the records .
 
-You can define <b>A</b>,<b>MX</b>, <b>AAA</b> .. etcd type of records to your domain and define multiple of value for records via list define to the key of `records` . 
+You can define <b>A</b>,<b>MX</b>, <b>AAA</b> .. etc records to your domain and define multiple value for records define a list of values to the `records` key . 
 
 ```
 module "my_route53" {
