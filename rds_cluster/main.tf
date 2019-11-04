@@ -16,6 +16,15 @@ resource "aws_rds_cluster" "rds_cluster" {
   db_subnet_group_name = "${var.rds_subnet_group_id}" //aws_db_subnet_group id
   vpc_security_group_ids = ["${var.vpc_security_group_id}"] //vpc_security_group_id
 
+
+  scaling_configuration {
+    auto_pause               = "${var.auto_pause}"
+    max_capacity             = "${var.max_capacity}"
+    min_capacity             = "${var.min_capacity}"
+    timeout_action           = "${var.timeout_action}"
+    seconds_until_auto_pause = "${var.seconds_until_auto_pause}"
+  }
+
   tags = {
     Name = "${upper(var.tag_project)} RDS Cluster ${var.profile}"
   }
