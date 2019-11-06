@@ -7,7 +7,7 @@ resource "aws_rds_cluster" "rds_cluster" {
   master_username    = "${var.master_user}"
   master_password    = "${var.master_password}"
   storage_encrypted  = "${var.encrypted}"
-
+  
   backup_retention_period = 5 # days
   preferred_backup_window = "03:00-07:00"
   apply_immediately       = true
@@ -28,4 +28,8 @@ resource "aws_rds_cluster" "rds_cluster" {
   tags = {
     Name = "${upper(var.tag_project)} RDS Cluster ${var.profile}"
   }
+}
+
+output "rds_cluster_endpoint" {
+  value = "${aws_rds_cluster.rds_cluster.endpoint}"
 }
