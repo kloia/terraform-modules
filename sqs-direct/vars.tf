@@ -2,6 +2,10 @@ variable "queue_names" {
   type="list"
 }
 
+variable "visibility_timeout" {
+  default = 900
+}
+
 variable "delay_seconds" {
   default = 90
 }

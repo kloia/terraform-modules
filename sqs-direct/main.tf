@@ -23,8 +23,7 @@ resource "aws_sqs_queue" "queue" {
   message_retention_seconds = "${var.message_retention_seconds}" #"${lookup(module.queue_map.queue_mappings[count.index],"mes_ret_sec")}"
   receive_wait_time_seconds = "${var.receive_wait_time_seconds}" #"${lookup(module.queue_map.queue_mappings[count.index],"rec_wait_time_sec")}"
   fifo_queue = "${var.fifo_queue}"#${lookup(module.queue_map.queue_mappings[count.index],"fifo_queue")}"
-  
-  
+  visibility_timeout_seconds  = "${var.visibility_timeout}"
   
   tags = "${module.global.global}"
 
