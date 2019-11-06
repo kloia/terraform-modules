@@ -17,12 +17,15 @@ module "global"  {
 resource "aws_sqs_queue" "queue" {
   count = "${length(var.queue_names)}"
 
-  name                      = "${lookup(module.queue_map.queue_mappings[count.index],"queue_name")}"
-  delay_seconds             = "${lookup(module.queue_map.queue_mappings[count.index],"delaysec")}"
-  max_message_size          = "${lookup(module.queue_map.queue_mappings[count.index],"max_message_size")}"
-  message_retention_seconds = "${lookup(module.queue_map.queue_mappings[count.index],"mes_ret_sec")}"
-  receive_wait_time_seconds = "${lookup(module.queue_map.queue_mappings[count.index],"rec_wait_time_sec")}"
-  fifo_queue = "${lookup(module.queue_map.queue_mappings[count.index],"fifo_queue")}"
+  name                      = "${lookup(var.queue_list[count.index],"queue_name")}"
+  delay_seconds             = "${var.delay_seconds}" #"${lookup(module.queue_map.queue_mappings[count.index],"delaysec")}"
+  max_message_size          = "${var.max_message_size}" #"${lookup(module.queue_map.queue_mappings[count.index],"max_message_size")}"
+  message_retention_seconds = "${var.message_retention_seconds}" #"${lookup(module.queue_map.queue_mappings[count.index],"mes_ret_sec")}"
+  receive_wait_time_seconds = "${var.receive_wait_time_seconds}" #"${lookup(module.queue_map.queue_mappings[count.index],"rec_wait_time_sec")}"
+  fifo_queue = "${var.fifo_queue}"${lookup(module.queue_map.queue_mappings[count.index],"fifo_queue")}"
+  
+  
+  
   tags = "${module.global.global}"
 
 }

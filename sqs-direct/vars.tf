@@ -22,6 +22,13 @@ variable "policy" {
   default = ""
 }
 
+variable "queue_list" {
+  
+}
+
+variable "fifo_queue" {
+  default = false
+}
 
 
 variable "tags" {
