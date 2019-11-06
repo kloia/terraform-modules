@@ -56,3 +56,11 @@ variable "timeout_action" {
 variable "seconds_until_auto_pause" {
   default = 300
 }
+
+variable "min_capacity" {
+  
+}
+
+variable "max_capacity" {
+  
+}
