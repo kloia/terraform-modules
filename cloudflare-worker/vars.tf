@@ -16,3 +16,11 @@ variable "enabled" {
 variable "pattern" {
   
 }
+
+variable "paused" {
+  default = false
+}
+
+variable "status" {
+  default = "active"
+}
