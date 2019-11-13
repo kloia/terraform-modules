@@ -2,9 +2,13 @@ variable "dax_cluster_name" {
   default = "cluster-1"
 }
 
+variable "security_groups" {
+  default = ["sg-000"]
+}
+
 variable "dax_subnet_lists" {
   type = "list"
-  default = ["subnet-1", "subnet-2"]
+  default = ["subnet-000", "subnet-111", "subnet-222"]
 }
 
 variable "query_ttl_millis" {
