@@ -36,3 +36,8 @@ resource "aws_customer_gateway" "customer_gateway" {
 output "customer_gateway_id" {
   value = "${aws_customer_gateway.customer_gateway.id}"
 }
+
+resource "aws_vpn_gateway_attachment" "vpn_attachment" {
+  vpc_id         = "${var.vpc_id}"
+  vpn_gateway_id = "${aws_vpn_gateway.vpn_gateway.id}"
+}
