@@ -70,7 +70,7 @@ variable "restriction_type" {
 }
 variable "locations" {
   type = "list"
-  default = ""
+  default = []
 }
 variable "acm_certificate_arn" {
   description = "Existing ACM Certificate ARN"
