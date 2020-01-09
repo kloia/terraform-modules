@@ -9,7 +9,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
         origin_id   = "${var.origin_id}"
         s3_origin_config {
             origin_access_identity = "origin-access-identity/cloudfront/${aws_cloudfront_origin_access_identity.origin_access_identity.id}"
-    }
+        }
     }
 
     enabled = "${var.is_enabled}"
@@ -52,7 +52,10 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
         ssl_support_method             = "sni-only"
         minimum_protocol_version       = "${var.viewer_minimum_protocol_version}"
         cloudfront_default_certificate = "${var.acm_certificate_arn == "" ? true : false}"
-  }
+    }
+}
 
 
+output "cloudfront_origin_domain" {
+  value = "${aws_cloudfront_distribution.s3_distribution.domain_name}"
 }
