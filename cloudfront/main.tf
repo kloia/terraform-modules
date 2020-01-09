@@ -1,10 +1,15 @@
 
+resource "aws_cloudfront_origin_access_identity" "origin_access_identity" {
+  comment = "CDN origin access identity"
+}
 resource "aws_cloudfront_distribution" "s3_distribution" {
     origin {
 
         domain_name = "${var.domain_name}"
         origin_id   = "${var.origin_id}"
-    
+        s3_origin_config {
+            origin_access_identity = "origin-access-identity/cloudfront/${aws_cloudfront_origin_access_identity.origin_access_identity.id}"
+    }
     }
 
     enabled = "${var.is_enabled}"
@@ -43,11 +48,11 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
 
     viewer_certificate {
-        cloudfront_default_certificate = true
-    }
+        acm_certificate_arn            = "${var.acm_certificate_arn}"
+        ssl_support_method             = "sni-only"
+        minimum_protocol_version       = "${var.viewer_minimum_protocol_version}"
+        cloudfront_default_certificate = "${var.acm_certificate_arn == "" ? true : false}"
+  }
 
 
 }
-
-
-
