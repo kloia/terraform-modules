@@ -71,6 +71,15 @@ variable "restriction_type" {
 variable "locations" {
   type = "list"
 }
+variable "acm_certificate_arn" {
+  description = "Existing ACM Certificate ARN"
+  default     = ""
+}
+variable "viewer_minimum_protocol_version" {
+  description = "(Optional) The minimum version of the SSL protocol that you want CloudFront to use for HTTPS connections."
+  default     = "TLSv1"
+}
+
 
 
 

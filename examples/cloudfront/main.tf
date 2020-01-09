@@ -10,6 +10,7 @@ module "my_cdn" {
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = "${module.my_s3_bucket.s3_origin_id}"
     headers = ["Origin"]
+    acm_certificate_arn = "YOUR ACM CERTIFICATE" # optional, if you use your existing ACM certificate arn
 }
 
 module "my_s3_bucket" {
