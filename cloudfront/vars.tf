@@ -5,7 +5,7 @@ variable "is_enabled" {
 variable "is_ipv6_enabled" {
     default = false
 }
-variable "domain_name" {
+variable "domain_namee" {
   
 }
 
