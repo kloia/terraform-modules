@@ -33,9 +33,6 @@ variable "port" {
   default = 27017
 }
 
-variable "master_username" {
-  
-}
 
 variable "backup_retention_period" {
   default = 1
