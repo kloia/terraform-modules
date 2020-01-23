@@ -1,14 +1,9 @@
-data "aws_ssm_parameter" "password" {
-    name = "${var.password_key_ssm}"
-    with_decryption = true
-}
-
 resource "aws_docdb_cluster" "docdb_cluster" {
   cluster_identifier      = "${var.cluster_name}"
   engine                  = "docdb"
   port                    = "${var.port}"
   master_username         = "${var.master_username}"
-  master_password         = "${data.aws_ssm_parameter.password.value}"
+  master_password         = "${var.master_password}"
   backup_retention_period = "${var.backup_retention_period}"
   skip_final_snapshot     = "${var.skip_final_snapshot}"
   apply_immediately       = "${var.apply_immediately}"
@@ -73,8 +68,4 @@ resource "aws_security_group" "docdb_cluster_sg" {
 # Output
 output "cluster_endpoint" {
   value = "${aws_docdb_cluster.docdb_cluster.endpoint}"
-}
-
-output "password" {
-  value = "${var.password_key_ssm}"
 }

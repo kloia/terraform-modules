@@ -3,8 +3,12 @@ variable "tag_organisation" {
   
 }
 
+variable "master_username" {
+  
+}
 
-variable "password_key_ssm" {
+
+variable "master_password" {
   
 }
 
