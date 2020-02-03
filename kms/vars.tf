@@ -23,3 +23,7 @@ variable "description" {
 variable "policy" {
   
 }
+
+variable "alias_name" {
+  
+}
