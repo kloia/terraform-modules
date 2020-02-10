@@ -1,7 +1,3 @@
-variable "repository_name" {
-  
-}
-
 
 variable "scan_on_push" {
   default = false
@@ -13,4 +9,9 @@ variable "tag_mutability" {
 
 variable "repo_policy" {
   
+}
+
+
+variable "repo_names" {
+  type = "list"
 }
