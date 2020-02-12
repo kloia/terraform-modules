@@ -13,4 +13,6 @@ resource "aws_ecr_repository_policy" "repo_policy" {
   repository = "${var.repo_names[count.index]}"
 
   policy = "${var.repo_policy}"
+  depends_on = ["${aws_ecr_repository.repository[count.index]}"]
+
 }
