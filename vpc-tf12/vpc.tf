@@ -9,10 +9,6 @@ resource "aws_vpc" "my_vpc" {
     enable_dns_hostnames  = "${var.enable_dns_hostnames}"
 
     tags = "${merge(
-      map(
-        "Name", "${var.cluster_name}",
-        "kubernetes.io/cluster/${var.cluster_name}", "shared",
-      ),
       local.common_tags
     )}"
 
@@ -35,10 +31,7 @@ resource "aws_subnet" "public" {
   availability_zone       = "${element(data.aws_availability_zones.available.names, count.index)}"
 
     tags = "${merge(
-      map(
-        "Name", "${var.cluster_name}",
-        "kubernetes.io/cluster/${var.cluster_name}", "shared",
-      ),
+
       local.common_tags
     )}"
 
@@ -56,10 +49,6 @@ resource "aws_subnet" "private" {
   availability_zone       =  "${element(data.aws_availability_zones.available.names, count.index)}"
 
     tags = "${merge(
-      map(
-        "Name", "${var.cluster_name}",
-        "kubernetes.io/cluster/${var.cluster_name}", "shared",
-      ),
       local.common_tags
     )}"
 }
@@ -73,10 +62,6 @@ resource "aws_internet_gateway" "gw" {
   vpc_id                  = "${local.vpc_id}"
   
     tags = "${merge(
-      map(
-        "Name", "${var.cluster_name}",
-        "kubernetes.io/cluster/${var.cluster_name}", "shared",
-      ),
       local.common_tags
     )}"
 
@@ -96,10 +81,6 @@ resource "aws_eip" "vpc_eip" {
   
   
     tags = "${merge(
-      map(
-        "Name", "${var.cluster_name}",
-        "kubernetes.io/cluster/${var.cluster_name}", "shared",
-        ),
       local.common_tags
     )}"
 
@@ -143,11 +124,7 @@ resource "aws_route_table" "private" {
   vpc_id = "${aws_vpc.my_vpc.id}"
   
   tags = "${merge(
-        local.common_tags,
-        map(
-        "kubernetes", "awesome-app-server",
-        "Role", "server"
-        )
+        local.common_tags
   )}"
 
   route {
