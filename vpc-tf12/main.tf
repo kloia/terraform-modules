@@ -1,161 +1,183 @@
-locals {
-  common_tags = var.tags
-}
+data "aws_availability_zones" "available" {}
 
-resource "aws_vpc" "my_vpc" {
-  cidr_block           = var.vpc_cidr
-  enable_dns_support   = var.enable_dns_support
+resource "aws_vpc" "vpc" {
+
+  cidr_block           = var.cidr
   enable_dns_hostnames = var.enable_dns_hostnames
+  enable_dns_support   = var.enable_dns_support
 
   tags = merge(
-    local.common_tags
+    {
+      "Name" = format("%s", var.name)
+    },
+    var.tags,
+    var.vpc_tags,
   )
-
 }
 
-locals {
-  vpc_id = aws_vpc.my_vpc.id
-}
-data "aws_availability_zones" "available" {
+resource "aws_subnet" "private" {
+  count = var.create_vpc && length(var.private_subnets) > 0 ? length(var.private_subnets) : 0
 
+  vpc_id            = aws_vpc.vpc.id
+  cidr_block        = var.private_subnets[count.index]
+  availability_zone = element(data.aws_availability_zones.available.names, count.index)
+
+
+  tags = merge(
+    {
+      "Name" = format(
+        "%s-${var.private_subnet_suffix}-%s",
+        var.name,
+        element(data.aws_availability_zones.available.names, count.index),
+      ),
+    },
+    var.tags,
+    var.private_subnet_tags,
+  )
 }
 
 resource "aws_subnet" "public" {
-  count             = var.public_subnet_count
-  vpc_id            = local.vpc_id
-  cidr_block        = cidrsubnet(signum(length(aws_vpc.my_vpc.cidr_block)) == 1 ? var.vpc_cidr : aws_vpc.my_vpc.cidr_block, ceil(log(var.public_subnet_count * 2, 2)), var.public_subnet_count + count.index)
-  availability_zone = element(data.aws_availability_zones.available.names, count.index)
+  count = var.create_vpc && length(var.public_subnets) > 0 && (false == var.one_nat_gateway_per_az || length(var.public_subnets) >= length(data.aws_availability_zones.available.names)) ? length(var.public_subnets) : 0
+
+  vpc_id                  = aws_vpc.vpc.id
+  cidr_block              = element(concat(var.public_subnets, [""]), count.index)
+  availability_zone       = element(data.aws_availability_zones.available.names, count.index)
+  map_public_ip_on_launch = var.map_public_ip_on_launch
 
   tags = merge(
-    local.common_tags
-  )
-
-
-}
-
-
-resource "aws_subnet" "private" {
-
-  count  = var.private_subnet_count
-  vpc_id = local.vpc_id
-
-  cidr_block        = cidrsubnet(signum(length(aws_vpc.my_vpc.cidr_block)) == 1 ? aws_vpc.my_vpc.cidr_block : aws_vpc.my_vpc.cidr_block, ceil(log(var.private_subnet_count * 2, 2)), count.index)
-  availability_zone = element(data.aws_availability_zones.available.names, count.index)
-
-  tags = merge(
-    local.common_tags
+    {
+      "Name" = format(
+        "%s-${var.public_subnet_suffix}-%s",
+        var.name,
+        element(data.aws_availability_zones.available.names, count.index),
+      ),
+    },
+    var.tags,
+    var.public_subnet_tags,
   )
 }
 
-resource "aws_internet_gateway" "gw" {
-  vpc_id = local.vpc_id
+resource "aws_internet_gateway" "igw" {
+  count = var.create_vpc && length(var.public_subnets) > 0 ? 1 : 0
+
+  vpc_id = aws_vpc.vpc.id
 
   tags = merge(
-    local.common_tags
+    {
+      "Name" = format("%s", var.name)
+    },
+    var.tags,
+    var.igw_tags,
   )
-
 }
 
-resource "aws_eip" "vpc_eip" {
-  vpc        = true
-  depends_on = [aws_internet_gateway.gw]
-}
 
-resource "aws_route_table" "public" { ### Public
-  vpc_id = local.vpc_id
+resource "aws_route_table" "public" {
+  count = var.create_vpc && length(var.public_subnets) > 0 ? 1 : 0
 
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.gw.id
-  }
+  vpc_id = aws_vpc.vpc.id
 
   tags = merge(
-    local.common_tags
+    {
+      "Name" = format("%s-${var.public_subnet_suffix}", var.name)
+    },
+    var.tags,
   )
-
 }
-
 
 resource "aws_route" "public_internet_gateway" {
-  route_table_id         = aws_route_table.public.id
+  count = var.create_vpc && length(var.public_subnets) > 0 ? 1 : 0
+
+  route_table_id         = aws_route_table.public[0].id
   destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = aws_internet_gateway.gw.id
+  gateway_id             = aws_internet_gateway.igw[0].id
 
-}
-
-resource "aws_route_table_association" "association_public" {
-  count          = var.public_subnet_count
-  subnet_id      = element(aws_subnet.public.*.id, count.index)
-  route_table_id = aws_route_table.public.id
-
-}
-resource "aws_route_table_association" "association_private" {
-  count          = var.private_subnet_count
-  subnet_id      = element(aws_subnet.private.*.id, count.index)
-  route_table_id = aws_route_table.private.id
-
-}
-
-resource "random_integer" "p_subnet_id" {
-  min = 0
-  max = var.public_subnet_count
-}
-
-
-resource "aws_nat_gateway" "vpc_nat" {
-
-  allocation_id = aws_eip.vpc_eip.id
-  subnet_id     = element(aws_subnet.public.*.id, (random_integer.p_subnet_id.result))
+  timeouts {
+    create = "5m"
+  }
 }
 
 resource "aws_route_table" "private" {
-  vpc_id = aws_vpc.my_vpc.id
+  count = var.create_vpc && length(var.private_subnets) > 0 ? length(var.private_subnets) : 0
+
+  vpc_id = aws_vpc.vpc.id
 
   tags = merge(
-    local.common_tags
+    {
+      "Name" = format(
+        "%s-${var.private_subnet_suffix}-%s",
+        var.name,
+        element(data.aws_availability_zones.available.names, count.index),
+      )
+    },
+    var.tags,
   )
 
-  route {
-    cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.vpc_nat.id
+}
+
+resource "aws_eip" "nat" {
+  count = var.create_vpc && var.enable_nat_gateway ? length(var.public_subnets) : 0
+
+  vpc = true
+
+  tags = merge(
+    {
+      "Name" = format(
+        "%s-eip-nat-%s",
+        var.name,
+        element(data.aws_availability_zones.available.names, count.index),
+      )
+    },
+    var.tags,
+  )
+}
+
+resource "aws_nat_gateway" "ngw" {
+  count = var.create_vpc && var.enable_nat_gateway ? length(var.public_subnets) : 0
+
+  allocation_id = element(aws_eip.nat.*.id, count.index)
+  subnet_id     = element(aws_subnet.public.*.id, count.index)
+
+  tags = merge(
+    {
+      "Name" = format(
+        "%s-ngw-%s",
+        var.name,
+        element(data.aws_availability_zones.available.names, count.index),
+      )
+    },
+    var.tags,
+  )
+
+  depends_on = [aws_internet_gateway.igw]
+}
+
+resource "aws_route" "private_nat_gateway" {
+  count = var.create_vpc && var.enable_nat_gateway ? length(var.private_subnets) : 0
+
+  route_table_id         = element(aws_route_table.private.*.id, count.index)
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = element(aws_nat_gateway.ngw.*.id, count.index)
+
+  timeouts {
+    create = "5m"
   }
-
-}
-
-output "azs" {
-  value = data.aws_availability_zones.available.names
-}
-
-output "vpc_id" {
-  value = aws_vpc.my_vpc.id
-}
-output "private_route_table_ids" {
-  value = [aws_route_table.private.*.id]
-}
-
-output "private_subnet_cidrs" {
-  value = [aws_subnet.private.*.cidr_block]
-}
-
-output "public_subnet_cidrs" {
-  value = [aws_subnet.public.*.cidr_block]
 }
 
 
-output "vpc_cidr" {
-  value = aws_vpc.my_vpc.cidr_block
-}
-output "public_subnets_ids" {
-  value = [aws_subnet.public.*.id]
+resource "aws_route_table_association" "private" {
+  count = var.create_vpc && length(var.private_subnets) > 0 ? length(var.private_subnets) : 0
+
+  subnet_id = element(aws_subnet.private.*.id, count.index)
+  route_table_id = element(
+    aws_route_table.private.*.id, count.index,
+  )
 }
 
-output "private_subnets_ids" {
-  value = [aws_subnet.private.*.id]
-}
-output "nat_gateway_id" {
-  value = [aws_nat_gateway.vpc_nat.id]
-}
 
-output "igw_id" {
-  value = [aws_internet_gateway.gw.id]
+resource "aws_route_table_association" "public" {
+  count = var.create_vpc && length(var.public_subnets) > 0 ? length(var.public_subnets) : 0
+
+  subnet_id      = element(aws_subnet.public.*.id, count.index)
+  route_table_id = aws_route_table.public[0].id
 }
