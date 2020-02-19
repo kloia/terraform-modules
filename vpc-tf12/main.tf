@@ -39,8 +39,8 @@ resource "aws_subnet" "private" {
   count  = var.private_subnet_count
   vpc_id = local.vpc_id
 
-  cidr_block       = cidrsubnet(signum(length(aws_vpc.my_vpc.cidr_block)) == 1 ? aws_vpc.my_vpc.cidr_block : aws_vpc.my_vpc.cidr_block, ceil(log(var.private_subnet_count * 2, 2)), count.index)
-  availability_zone       =  element(data.aws_availability_zones.available.names, count.index)
+  cidr_block        = cidrsubnet(signum(length(aws_vpc.my_vpc.cidr_block)) == 1 ? aws_vpc.my_vpc.cidr_block : aws_vpc.my_vpc.cidr_block, ceil(log(var.private_subnet_count * 2, 2)), count.index)
+  availability_zone = element(data.aws_availability_zones.available.names, count.index)
 
   tags = merge(
     local.common_tags
