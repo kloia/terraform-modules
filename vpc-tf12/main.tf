@@ -108,7 +108,7 @@ resource "aws_nat_gateway" "vpc_nat" {
   subnet_id     = element(aws_subnet.public.*.id, (random_integer.p_subnet_id.result))
 }
 
-resource "aws_route_table" "public" {
+resource "aws_route_table" "private" {
   vpc_id = aws_vpc.my_vpc.id
 
   tags = merge(
