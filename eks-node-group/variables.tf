@@ -24,6 +24,12 @@ variable "node_group_instance_type" {
   type        = list(string)
 }
 
+variable "kubernetes_labels" {
+  type        = map(string)
+  description = "Key-value mapping of Kubernetes labels. Only labels that are applied with the EKS API are managed by this argument. Other Kubernetes labels applied to the EKS Node Group will not be managed"
+  default     = {}
+}
+
 variable "tags" {
   description = "A map of tags to add to all resources"
   type        = map(string)

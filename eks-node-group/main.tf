@@ -15,7 +15,7 @@ resource "random_id" "suffix" {
   keepers = {
     disk_size      = var.node_group_disk_size
     instance_types = join("|", var.node_group_instance_type)
-    node_role_name  = var.node_role_name
+    node_role_name = var.node_role_name
 
     ec2_ssh_key               = var.key_name
     source_security_group_ids = join("|", var.source_security_group_ids)
@@ -50,8 +50,6 @@ resource "aws_eks_node_group" "eks_nodegroup" {
   }
 
 
-  # Ensure that IAM Role permissions are created before and deleted after EKS Node Group handling.
-  # Otherwise, EKS will not be able to properly delete EC2 Instances and Elastic Network Interfaces.
   depends_on = [
     var.cluster_endpoint,
     aws_iam_role_policy_attachment.eks_worker_node_AmazonEKSWorkerNodePolicy,
@@ -59,10 +57,7 @@ resource "aws_eks_node_group" "eks_nodegroup" {
     aws_iam_role_policy_attachment.eks_worker_node_AmazonEC2ContainerRegistryReadOnly,
   ]
 
-  # labels = merge(
-  #   lookup(var.node_groups_defaults, "k8s_labels", {}),
-  #   lookup(var.node_groups[each.key], "k8s_labels", {})
-  # )
+  labels = var.kubernetes_labels
 
   tags = merge(
     {
