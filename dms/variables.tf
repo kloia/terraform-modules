@@ -121,3 +121,12 @@ variable "repl_task_path" {
 variable "extract_doc_id" {
   default = true
 }
+
+variable "metadata_mode" {
+  default = "document"
+}
+
+
+variable "nesting_level" {
+  default = "one"
+}
