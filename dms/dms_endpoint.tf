@@ -12,7 +12,10 @@ resource "aws_dms_endpoint" "mongodb_source" {
 
   username = "${var.username}"
   password = "${var.password}"
-  
+
+  mongodb_settings {
+        extract_doc_id = "${var.extract_doc_id}"
+  }
 }
 
 
@@ -23,7 +26,7 @@ resource "aws_dms_endpoint" "dynamodb_target" {
   engine_name                 = "dynamodb"
   extra_connection_attributes = var.extra_conn_attr_dynamodb
   kms_key_arn                 = aws_kms_key.dms_customer_key[0].arn
-  service_access_role         = aws_iam_role.dms-access-for-endpoint.name
+  service_access_role         = aws_iam_role.dms-access-for-endpoint.arn
   ssl_mode                    = "${var.ssl_mode}"
 
 }

@@ -113,3 +113,11 @@ variable "map_rule_path" {
 variable "replication_task_id" {
   
 }
+
+variable "repl_task_path" {
+  
+}
+
+variable "extract_doc_id" {
+  default = true
+}
