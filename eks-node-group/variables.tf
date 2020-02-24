@@ -1,6 +1,7 @@
 variable "vpc_id" {
   description = "Id of the vpc for the cluster"
   type        = string
+  default     = ""
 }
 
 variable "node_group_name" {
@@ -12,16 +13,19 @@ variable "node_group_name" {
 variable "cluster_name" {
   description = "Name to be used on all the resources as identifier"
   type        = string
+  default     = ""
 }
 
 variable "node_group_disk_size" {
   description = "Disk size in GiB for worker nodes."
   type        = number
+  default     = 1
 }
 
 variable "node_group_instance_type" {
   description = "Set of instance types associated with the EKS Node Group."
   type        = list(string)
+  default     = []
 }
 
 variable "kubernetes_labels" {
@@ -45,34 +49,31 @@ variable "desired_capacity" {
 variable "max_capacity" {
   description = "Maximum worker capacity in the autoscaling group"
   type        = number
+  default     = 1
 }
 
 variable "min_capacity" {
   description = "Minimum worker capacity in the autoscaling group."
   type        = number
+  default     = 1
 }
 
-# variable "node_role_arn" {
-#   description = "Eks Worker role arn for managed nodes"
-#   type        = string
-# }
-#
 variable "node_role_name" {
   description = "Eks Worker name arn for managed nodes"
   type        = string
   default     = "eks-node-role"
 }
 
-
 variable "cluster_endpoint" {
   description = "Eks Worker name arn for managed nodes"
   type        = string
+  default     = ""
 }
 
 variable "source_security_group_ids" {
+  description = "Set of EC2 Security Group IDs to allow SSH access (port 22) from on the worker nodes. If you specify `ec2_ssh_key`, but do not specify this configuration when you create an EKS Node Group, port 22 on the worker nodes is opened to the Internet (0.0.0.0/0)"
   type        = list(string)
   default     = []
-  description = "Set of EC2 Security Group IDs to allow SSH access (port 22) from on the worker nodes. If you specify `ec2_ssh_key`, but do not specify this configuration when you create an EKS Node Group, port 22 on the worker nodes is opened to the Internet (0.0.0.0/0)"
 }
 
 variable "create_key_pair" {
@@ -84,7 +85,7 @@ variable "create_key_pair" {
 variable "key_name" {
   description = "The name for the key pair."
   type        = string
-  default     = null
+  default     = ""
 }
 
 
