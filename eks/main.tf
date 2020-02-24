@@ -2,14 +2,6 @@ data "aws_subnet_ids" "subnets" {
   vpc_id = var.vpc_id
 }
 
-data "aws_subnet_ids" "private" {
-  vpc_id = var.vpc_id
-
-  tags = {
-    Subnet = "Private"
-  }
-}
-
 resource "aws_cloudwatch_log_group" "eks_log_group" {
   count             = length(var.cluster_enabled_log_types)
   name              = "/aws/eks/${var.cluster_name}/cluster"
