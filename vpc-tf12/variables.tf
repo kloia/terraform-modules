@@ -1,16 +1,19 @@
 variable "region" {
   type        = string
   description = "AWS region"
+  default     = ""
 }
 
 variable "name" {
   description = "Name of the vpc"
   type        = string
+  default     = ""
 }
 
 variable "cidr" {
   description = "The CIDR block for the VPC"
   type        = string
+  default     = ""
 }
 
 variable "enable_dns_hostnames" {
@@ -25,10 +28,6 @@ variable "enable_dns_support" {
   default     = true
 }
 
-variable "cluster_name" {
-  description = "Name to be used on all the resources as identifier"
-  type        = string
-}
 
 variable "tags" {
   description = "A map of tags to add to all resources"
@@ -51,6 +50,7 @@ variable "create_vpc" {
 variable "public_subnets" {
   description = "A list of public subnets inside the VPC"
   type        = list(string)
+  default     = []
 }
 
 variable "public_subnet_suffix" {
@@ -80,6 +80,7 @@ variable "one_nat_gateway_per_az" {
 variable "private_subnets" {
   description = "A list of private subnets inside the VPC"
   type        = list(string)
+  default     = []
 }
 
 variable "private_subnet_suffix" {
