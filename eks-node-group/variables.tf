@@ -58,12 +58,6 @@ variable "min_capacity" {
   default     = 1
 }
 
-variable "node_role_name" {
-  description = "Eks Worker name arn for managed nodes"
-  type        = string
-  default     = "eks-node-role"
-}
-
 variable "cluster_endpoint" {
   description = "Eks Worker name arn for managed nodes"
   type        = string

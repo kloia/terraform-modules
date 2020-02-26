@@ -52,9 +52,6 @@ resource "aws_eks_node_group" "eks_nodegroup" {
 
   depends_on = [
     var.cluster_endpoint,
-    aws_iam_role_policy_attachment.eks_worker_node_AmazonEKSWorkerNodePolicy,
-    aws_iam_role_policy_attachment.eks_worker_node_AmazonEKS_CNI_Policy,
-    aws_iam_role_policy_attachment.eks_worker_node_AmazonEC2ContainerRegistryReadOnly,
   ]
 
   labels = var.kubernetes_labels
@@ -72,42 +69,4 @@ resource "aws_eks_node_group" "eks_nodegroup" {
     ignore_changes        = [scaling_config.0.desired_size]
   }
 
-}
-
-resource "aws_iam_role" "eks_worker_role" {
-  name = join("-", [var.node_role_name, random_id.suffix.hex])
-
-  assume_role_policy = jsonencode({
-    Statement = [{
-      Action = "sts:AssumeRole"
-      Effect = "Allow"
-      Principal = {
-        Service = "ec2.amazonaws.com"
-      }
-    }]
-    Version = "2012-10-17"
-  })
-
-  tags = merge(
-    {
-      "Name" = format("%s", var.cluster_name)
-    },
-    var.tags,
-  )
-}
-
-
-resource "aws_iam_role_policy_attachment" "eks_worker_node_AmazonEKSWorkerNodePolicy" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
-  role       = aws_iam_role.eks_worker_role.name
-}
-
-resource "aws_iam_role_policy_attachment" "eks_worker_node_AmazonEKS_CNI_Policy" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
-  role       = aws_iam_role.eks_worker_role.name
-}
-
-resource "aws_iam_role_policy_attachment" "eks_worker_node_AmazonEC2ContainerRegistryReadOnly" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
-  role       = aws_iam_role.eks_worker_role.name
 }
