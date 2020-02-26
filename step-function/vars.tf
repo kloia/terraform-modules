@@ -9,6 +9,7 @@ variable "region" {
   default = "us-east-2"
 }
 
-variable "iam_policy_content" {
+
+variable "role_arn" {
   
 }
