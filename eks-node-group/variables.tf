@@ -88,3 +88,10 @@ variable "public_key" {
   type        = string
   default     = ""
 }
+
+
+variable "node_role_arn" {
+  description = "ARN of the IAM worker role"
+  type        = string
+  default     = ""
+}

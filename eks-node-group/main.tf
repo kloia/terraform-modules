@@ -29,7 +29,7 @@ resource "random_id" "suffix" {
 resource "aws_eks_node_group" "eks_nodegroup" {
   cluster_name    = var.cluster_name
   node_group_name = var.node_group_name == "" ? join("-", [var.cluster_name, random_id.suffix.hex]) : var.node_group_name
-  node_role_arn   = aws_iam_role.eks_worker_role.arn
+  node_role_arn   = var.node_role_arn
   subnet_ids      = data.aws_subnet_ids.private.ids
   disk_size       = var.node_group_disk_size
   instance_types  = var.node_group_instance_type
