@@ -15,7 +15,7 @@ resource "random_id" "suffix" {
   keepers = {
     disk_size      = var.node_group_disk_size
     instance_types = join("|", var.node_group_instance_type)
-    node_role_name = var.node_role_name
+    node_role_arn  = var.node_role_arn
 
     ec2_ssh_key               = var.key_name
     source_security_group_ids = join("|", var.source_security_group_ids)
