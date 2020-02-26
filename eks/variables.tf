@@ -93,3 +93,10 @@ variable "kubeconfig_aws_authenticator_env_variables" {
   type        = map(string)
   default     = {}
 }
+
+
+variable "nodes_role_name" {
+  description = "User defined workers role name."
+  type        = string
+  default     = "worker-role"
+}
