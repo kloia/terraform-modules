@@ -95,3 +95,9 @@ variable "node_role_arn" {
   type        = string
   default     = ""
 }
+
+variable "node_groups" {
+  description = "Map of maps of `eks_node_groups` to create."
+  type        = any
+  default     = {}
+}
