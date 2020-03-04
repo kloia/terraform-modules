@@ -12,7 +12,7 @@ resource "aws_ecr_repository" "this" {
 
 
 resource "aws_ecr_lifecycle_policy" "default" {
-  count      = var.enabled ? length(var.repo_names) : 0
+  count      = var.enabled && length(var.ecr_lifecycle_policies) > 0 ? length(var.repo_names) : 0
   repository = aws_ecr_repository.this[count.index].name
 
   policy = jsonencode(var.ecr_lifecycle_policies)

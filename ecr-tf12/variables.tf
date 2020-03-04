@@ -29,7 +29,7 @@ variable "scan_images_on_push" {
 }
 
 variable "repo_names" {
-  description = "List repository names for AWS ECR "
+  description = "List repository names for AWS ECR"
   type        = list(string)
   default     = []
 }
@@ -42,5 +42,7 @@ variable "image_tag_mutability" {
 
 
 variable "ecr_lifecycle_policies" {
-  type = map
+  description = "Map of ECR lifecycle policies"
+  type        = map
+  default     = {}
 }
