@@ -15,7 +15,7 @@ resource "aws_ecr_lifecycle_policy" "default" {
   count      = var.enabled ? length(var.repo_names) : 0
   repository = aws_ecr_repository.this[count.index].name
 
-  policy = "${jsonencode(var.ecr_lifecycle_policies)}"
+  policy = jsonencode(var.ecr_lifecycle_policies)
 }
 
 
@@ -40,7 +40,10 @@ data "aws_iam_policy_document" "read_only" {
       "ecr:ListImages",
       "ecr:DescribeImages",
       "ecr:BatchGetImage",
-      "ecr:DescribeImageScanFindings",
+      "ecr:GetLifecyclePolicy",
+      "ecr:GetLifecyclePolicyPreview",
+      "ecr:ListTagsForResource",
+      "ecr:DescribeImageScanFindings"
     ]
   }
 }
@@ -82,7 +85,7 @@ data "aws_iam_policy_document" "empty" {
 }
 
 data "aws_iam_policy_document" "resource" {
-  count         = var.enabled ? length(var.repo_names) : 0
+  count         = var.enabled ? 1 : 0
   source_json   = length(var.principals_readonly_access) > 0 ? join("", [data.aws_iam_policy_document.read_only[0].json]) : join("", [data.aws_iam_policy_document.empty[0].json])
   override_json = length(var.principals_full_access) > 0 ? join("", [data.aws_iam_policy_document.full_access[0].json]) : join("", [data.aws_iam_policy_document.empty[0].json])
 }
