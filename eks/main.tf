@@ -25,8 +25,9 @@ resource "aws_eks_cluster" "eks" {
   vpc_config {
     endpoint_private_access = var.cluster_endpoint_private_access
     endpoint_public_access  = var.cluster_endpoint_public_access
-    security_group_ids      = []
+    security_group_ids      = [join("", aws_security_group.cluster_sec_group.*.id)]
     subnet_ids              = data.aws_subnet_ids.subnets.ids
+    public_access_cidrs     = var.cluster_endpoint_public_access_cidrs
   }
 
   timeouts {
@@ -36,8 +37,7 @@ resource "aws_eks_cluster" "eks" {
 
   depends_on = [
     aws_iam_role_policy_attachment.eks-AmazonEKSClusterPolicy,
-    aws_iam_role_policy_attachment.eks-AmazonEKSServicePolicy,
-    aws_cloudwatch_log_group.eks_log_group
+    aws_iam_role_policy_attachment.eks-AmazonEKSServicePolicy
   ]
 
   tags = merge(
@@ -50,7 +50,7 @@ resource "aws_eks_cluster" "eks" {
 
 
 resource "aws_security_group" "cluster_sec_group" {
-  name        = "allow_cluster"
+  name        = "eks_allow_cluster_internal_traffic"
   description = "Allow cluster internal traffic"
   vpc_id      = var.vpc_id
 
@@ -75,6 +75,20 @@ resource "aws_security_group" "cluster_sec_group" {
     },
     var.tags,
   )
+}
+
+
+resource "aws_security_group_rule" "cluster_private_access" {
+  count       = var.cluster_endpoint_private_access && var.cluster_endpoint_public_access == false ? 1 : 0
+  description = "Allow workstation to communicate with the cluster API Server"
+  type        = "ingress"
+  from_port   = 443
+  to_port     = 443
+  protocol    = "tcp"
+  cidr_blocks = var.cluster_endpoint_private_access_cidrs
+
+  security_group_id = aws_security_group.cluster_sec_group.id
+  depends_on        = [aws_security_group.cluster_sec_group]
 }
 
 resource "aws_iam_role" "eks_role" {

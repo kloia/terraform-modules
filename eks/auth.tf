@@ -22,7 +22,6 @@ provider "kubernetes" {
   cluster_ca_certificate = base64decode(aws_eks_cluster.eks.certificate_authority.0.data)
   token                  = data.aws_eks_cluster_auth.cluster_auth.token
   load_config_file       = false
-  version                = "1.10.0" # Needs to be removed later (there is a bug with latest version)
 }
 
 data "template_file" "node_group_arns" {
