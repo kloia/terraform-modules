@@ -24,6 +24,7 @@ resource "aws_eks_node_group" "eks_nodegroup" {
   subnet_ids      = data.aws_subnet_ids.private.ids
   disk_size       = each.value["node_group_disk_size"]
   instance_types  = each.value["node_group_instance_type"]
+  release_version = each.value["node_group_release_version"]
 
   scaling_config {
     desired_size = each.value["desired_capacity"]

@@ -28,6 +28,12 @@ variable "node_group_instance_type" {
   default     = []
 }
 
+variable "node_group_release_version" {
+  description = "AMI version of the EKS Node Group. Defaults to latest version for Kubernetes version."
+  type        = string
+  default     = ""
+}
+
 variable "kubernetes_labels" {
   type        = map(string)
   description = "Key-value mapping of Kubernetes labels. Only labels that are applied with the EKS API are managed by this argument. Other Kubernetes labels applied to the EKS Node Group will not be managed"
