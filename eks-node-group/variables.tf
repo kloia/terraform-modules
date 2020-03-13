@@ -28,6 +28,12 @@ variable "node_group_instance_type" {
   default     = []
 }
 
+variable "node_group_version" {
+  description = " Kubernetes version. Defaults to EKS Cluster Kubernetes version."
+  type        = string
+  default     = ""
+}
+
 variable "node_group_release_version" {
   description = "AMI version of the EKS Node Group. Defaults to latest version for Kubernetes version."
   type        = string
