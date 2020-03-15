@@ -12,7 +12,7 @@ resource "aws_rds_cluster" "rds_cluster" {
   preferred_backup_window = "03:00-07:00"
   apply_immediately       = "${var.apply_immediately}"
   skip_final_snapshot     = "${var.skip_final_snapshot}"
-
+  final_snapshot_identifier = "${var.final_snapshot_identifier}"
   db_subnet_group_name = "${var.rds_subnet_group_id}" //aws_db_subnet_group id
   vpc_security_group_ids = ["${var.vpc_security_group_id}"] //vpc_security_group_id
 

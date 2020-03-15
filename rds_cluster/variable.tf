@@ -77,3 +77,8 @@ variable "apply_immediately" {
 variable "backup_ret_period" {
   default = 5
 }
+
+
+variable "final_snapshot_identifier" {
+  default = ""
+}
