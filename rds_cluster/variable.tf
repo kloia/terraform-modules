@@ -64,3 +64,16 @@ variable "min_capacity" {
 variable "max_capacity" {
   
 }
+
+
+variable "skip_final_snapshot" {
+  default = false
+}
+
+variable "apply_immediately" {
+  default = true
+}
+
+variable "backup_ret_period" {
+  default = 5
+}

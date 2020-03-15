@@ -8,10 +8,10 @@ resource "aws_rds_cluster" "rds_cluster" {
   master_password    = "${var.master_password}"
   storage_encrypted  = "${var.encrypted}"
   
-  backup_retention_period = 5 # days
+  backup_retention_period = "${var.backup_ret_period}" # days
   preferred_backup_window = "03:00-07:00"
-  apply_immediately       = true
-  skip_final_snapshot     = true
+  apply_immediately       = "${var.apply_immediately}"
+  skip_final_snapshot     = "${var.skip_final_snapshot}"
 
   db_subnet_group_name = "${var.rds_subnet_group_id}" //aws_db_subnet_group id
   vpc_security_group_ids = ["${var.vpc_security_group_id}"] //vpc_security_group_id
