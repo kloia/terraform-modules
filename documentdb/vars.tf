@@ -39,7 +39,7 @@ variable "backup_retention_period" {
 }
 
 variable "skip_final_snapshot" {
-  default = true
+  default = false
 }
 
 variable "apply_immediately" {
@@ -65,4 +65,8 @@ variable "vpc_private_subnet_cidrs" {
 
 variable "vpc_public_subnet_cidrs" {
   type = "list"
+}
+
+variable "final_snapshot_identifier" {
+  
 }

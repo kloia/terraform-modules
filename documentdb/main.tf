@@ -6,6 +6,7 @@ resource "aws_docdb_cluster" "docdb_cluster" {
   master_password         = "${var.master_password}"
   backup_retention_period = "${var.backup_retention_period}"
   skip_final_snapshot     = "${var.skip_final_snapshot}"
+  final_snapshot_identifier = "${var.final_snapshot_identifier}"
   apply_immediately       = "${var.apply_immediately}"
   availability_zones      = ["${var.vpc_azs}"]
   db_subnet_group_name    = "${aws_docdb_subnet_group.docdb_cluster_subnet_group.name}"
