@@ -37,7 +37,8 @@ resource "aws_eks_cluster" "eks" {
 
   depends_on = [
     aws_iam_role_policy_attachment.eks-AmazonEKSClusterPolicy,
-    aws_iam_role_policy_attachment.eks-AmazonEKSServicePolicy
+    aws_iam_role_policy_attachment.eks-AmazonEKSServicePolicy,
+    aws_cloudwatch_log_group.eks_log_group
   ]
 
   tags = merge(
