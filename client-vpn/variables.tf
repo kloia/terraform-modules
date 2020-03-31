@@ -4,7 +4,7 @@ variable "client_cidr_block" {
 
 variable "subnet_list" {
   type = "list"
-  description = "The ID of the subnet to associate with the Client VPN endpoint."
+  description = "Subnet Assosication with the Client VPN endpoint."
   default = [""]
 }
 variable "client" {
