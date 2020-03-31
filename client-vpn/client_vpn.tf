@@ -1,6 +1,6 @@
 resource "aws_acm_certificate" "client_cert" {
-  private_key       = "${file("${path.root}/${var.cert_dir}/${var.client}.${var.domain}.key")}"
-  certificate_body  = "${file("${path.root}/${var.cert_dir}/${var.client}.${var.domain}.crt")}"
+  private_key       = "${file("${path.root}/${var.cert_dir}/${var.client}.${var.domain}.vpn.key")}"
+  certificate_body  = "${file("${path.root}/${var.cert_dir}/${var.client}.${var.domain}.vpn.crt")}"
   certificate_chain = "${file("${path.root}/${var.cert_dir}/ca.crt")}"
 }
 
@@ -68,7 +68,7 @@ resource "aws_cloudwatch_log_stream" "client_vpn_log_stream" {
 }
 
 resource "null_resource" "client_vpn_route_internet" {
-  count = "${var.is_access_internet == "${length("${var.subnet_list}")}" ? "" : 0}"
+  count = "${var.is_access_internet == true ?  "${length("${var.subnet_list}")}" : 0}"
  
   provisioner "local-exec" {
     when    = "create"
@@ -77,6 +77,6 @@ resource "null_resource" "client_vpn_route_internet" {
 
   provisioner "local-exec" {
     when    = "destroy"
-    command = "aws ec2 delete-client-vpn-route --client-vpn-endpoint-id ${aws_ec2_client_vpn_endpoint.client_vpn_endpoint.id} --destination-cidr-block 0.0.0.0/0 --target-vpc-subnet-id ${var.subnet_list[count.index]} --profile ${var.profile}"
+    command = "aws ec2 delete-client-vpn-route --client-vpn-endpoint-id ${aws_ec2_client_vpn_endpoint.client_vpn_endpoint.id} --destination-cidr-block 0.0.0.0/0 --target-vpc-subnet-id ${var.subnet_list[count.index]}"
   }
 }

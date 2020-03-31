@@ -16,7 +16,7 @@ variable "cert_dir" {
 }
 
 variable "domain" {
-  default = ""
+  default = "daas.kloia"
 }
 variable "tag_name" {
   default = "test"
