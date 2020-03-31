@@ -3,9 +3,9 @@ variable "client_cidr_block" {
 }
 
 variable "subnet_list" {
-  type = "list"
+  type        = "list"
   description = "Subnet Assosication with the Client VPN endpoint."
-  default = [""]
+  default     = [""]
 }
 variable "client" {
   default = "client1" 
@@ -28,7 +28,7 @@ variable "aws_region" {
 
 variable "dns_servers" {
   default = ["8.8.8.8"]
-  type = "list"
+  type    = "list"
 }
 
 variable "tag_environment" {

@@ -26,13 +26,13 @@ resource "aws_ec2_client_vpn_endpoint" "client_vpn_endpoint" {
   }
 
   tags = {
-    Name = "${var.tag_name}"
+    Name        = "${var.tag_name}"
     Environment = "${var.tag_environment}"
   }
 }
 
 resource "aws_ec2_client_vpn_network_association" "client_vpn_network_association" {
-  count = "${length("${var.subnet_list}")}"
+  count                  = "${length("${var.subnet_list}")}"
   client_vpn_endpoint_id = "${aws_ec2_client_vpn_endpoint.client_vpn_endpoint.id}"
   subnet_id              = "${var.subnet_list[count.index]}"
 }
@@ -44,14 +44,13 @@ resource "null_resource" "authorize-client-vpn-ingress" {
 
   depends_on = [
     "aws_ec2_client_vpn_endpoint.client_vpn_endpoint",
-    "aws_ec2_client_vpn_network_association.client_vpn_network_association"
+    "aws_ec2_client_vpn_network_association.client_vpn_network_association",
   ]
 }
 resource "null_resource" "append_client_config_certs" {
   provisioner "local-exec" {
     command = "${path.module}/scripts/append_cert_to_config.sh ${path.root} ${var.cert_dir} ${var.domain}"
   }
-
 }
 
 resource "aws_cloudwatch_log_group" "client_vpn_log_group" {
@@ -69,7 +68,8 @@ resource "aws_cloudwatch_log_stream" "client_vpn_log_stream" {
 
 resource "null_resource" "client_vpn_route_internet" {
   count = "${var.is_access_internet == true ?  "${length("${var.subnet_list}")}" : 0}"
- 
+
+
   provisioner "local-exec" {
     when    = "create"
     command = "aws ec2 create-client-vpn-route --client-vpn-endpoint-id ${aws_ec2_client_vpn_endpoint.client_vpn_endpoint.id} --destination-cidr-block 0.0.0.0/0 --target-vpc-subnet-id ${var.subnet_list[count.index]} --description Internet-Access"
