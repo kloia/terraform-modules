@@ -1,6 +1,6 @@
 resource "aws_acm_certificate" "client_cert" {
-  private_key       = "${file("${path.root}/${var.cert_dir}/${var.client}.${var.domain}.vpn.key")}"
-  certificate_body  = "${file("${path.root}/${var.cert_dir}/${var.client}.${var.domain}.vpn.crt")}"
+  private_key       = "${file("${path.root}/${var.cert_dir}/${var.client}.${var.domain}.key")}"
+  certificate_body  = "${file("${path.root}/${var.cert_dir}/${var.client}.${var.domain}.crt")}"
   certificate_chain = "${file("${path.root}/${var.cert_dir}/ca.crt")}"
 }
 
