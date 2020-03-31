@@ -7,6 +7,9 @@ variable "subnet_list" {
   description = "The ID of the subnet to associate with the Client VPN endpoint."
   default = [""]
 }
+variable "client" {
+  default = "client1" 
+}
 
 variable "cert_dir" {
   default = "certs"

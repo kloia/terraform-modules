@@ -10,8 +10,8 @@ resource "aws_acm_certificate" "server_cert" {
   certificate_chain = "${file("${path.root}/${var.cert_dir}/ca.crt")}"
 }
 
-resource "aws_ec2_client_vpn_endpoint" "client-vpn-endpoint" {
-  description            = "terraform-clientvpn-endpoint"
+resource "aws_ec2_client_vpn_endpoint" "client_vpn_endpoint" {
+  description            = "${var.tag_name}-clientvpn-endpoint"
   server_certificate_arn = "${aws_acm_certificate.server_cert.arn}"
   client_cidr_block      = "${var.client_cidr_block}"
   split_tunnel           = "${var.is_split_tunnel}"
@@ -31,23 +31,23 @@ resource "aws_ec2_client_vpn_endpoint" "client-vpn-endpoint" {
   }
 }
 
-resource "aws_ec2_client_vpn_network_association" "client-vpn-network-association" {
+resource "aws_ec2_client_vpn_network_association" "client_vpn_network_association" {
   count = "${length("${var.subnet_list}")}"
-  client_vpn_endpoint_id = "${aws_ec2_client_vpn_endpoint.client-vpn-endpoint.id}"
+  client_vpn_endpoint_id = "${aws_ec2_client_vpn_endpoint.client_vpn_endpoint.id}"
   subnet_id              = "${var.subnet_list[count.index]}"
 }
 
 resource "null_resource" "authorize-client-vpn-ingress" {
   provisioner "local-exec" {
-    command = "aws --region ${var.aws_region} ec2 authorize-client-vpn-ingress --client-vpn-endpoint-id ${aws_ec2_client_vpn_endpoint.client-vpn-endpoint.id} --target-network-cidr 0.0.0.0/0 --authorize-all-groups"
+    command = "aws --region ${var.aws_region} ec2 authorize-client-vpn-ingress --client-vpn-endpoint-id ${aws_ec2_client_vpn_endpoint.client_vpn_endpoint.id} --target-network-cidr 0.0.0.0/0 --authorize-all-groups"
   }
 
   depends_on = [
-    "aws_ec2_client_vpn_endpoint.client-vpn-endpoint",
-    "aws_ec2_client_vpn_network_association.client-vpn-network-association"
+    "aws_ec2_client_vpn_endpoint.client_vpn_endpoint",
+    "aws_ec2_client_vpn_network_association.client_vpn_network_association"
   ]
 }
-resource "null_resource" "append-client-config-certs" {
+resource "null_resource" "append_client_config_certs" {
   provisioner "local-exec" {
     command = "${path.module}/scripts/append_cert_to_config.sh ${path.root} ${var.cert_dir} ${var.domain}"
   }
@@ -55,7 +55,7 @@ resource "null_resource" "append-client-config-certs" {
 }
 
 resource "aws_cloudwatch_log_group" "client_vpn_log_group" {
-  name = "${var.tag_name}-client-vpn-log-group"
+  name = "${var.tag_name}-client_vpn_log_group"
 
   tags = {
     Environment = "${var.tag_environment}"
@@ -63,20 +63,20 @@ resource "aws_cloudwatch_log_group" "client_vpn_log_group" {
 }
 
 resource "aws_cloudwatch_log_stream" "client_vpn_log_stream" {
-  name           = "${var.tag_name}-client-vpn-log-stream"
+  name           = "${var.tag_name}_client_vpn_log_stream"
   log_group_name = "${aws_cloudwatch_log_group.client_vpn_log_group.name}"
 }
 
 resource "null_resource" "client_vpn_route_internet" {
-  count = "${var.is_access_internet == true ? 1 : 0}"
+  count = "${var.is_access_internet == "${length("${var.subnet_list}")}" ? "" : 0}"
  
   provisioner "local-exec" {
     when    = "create"
-    command = "aws ec2 create-client-vpn-route --client-vpn-endpoint-id ${aws_ec2_client_vpn_endpoint.client_vpn.id} --destination-cidr-block 0.0.0.0/0 --target-vpc-subnet-id subnet-0632640b3e6a43e89 --description Internet-Access"
+    command = "aws ec2 create-client-vpn-route --client-vpn-endpoint-id ${aws_ec2_client_vpn_endpoint.client_vpn_endpoint.id} --destination-cidr-block 0.0.0.0/0 --target-vpc-subnet-id ${var.subnet_list[count.index]} --description Internet-Access"
   }
 
   provisioner "local-exec" {
     when    = "destroy"
-    command = "aws ec2 delete-client-vpn-route --client-vpn-endpoint-id ${aws_ec2_client_vpn_endpoint.client_vpn.id} --destination-cidr-block 0.0.0.0/0 --target-vpc-subnet-id ${aws_subnet.subnet_az1.id} --profile ${var.profile}"
+    command = "aws ec2 delete-client-vpn-route --client-vpn-endpoint-id ${aws_ec2_client_vpn_endpoint.client_vpn_endpoint.id} --destination-cidr-block 0.0.0.0/0 --target-vpc-subnet-id ${var.subnet_list[count.index]} --profile ${var.profile}"
   }
 }
