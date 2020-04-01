@@ -5,25 +5,15 @@ variable "client_cidr_block" {
 variable "subnet_list" {
   type        = "list"
   description = "Subnet Assosication with the Client VPN endpoint."
-  default     = [""]
-}
-variable "client" {
-  default = "client1" 
+  default     = ["subnet-123", "subnet-124", "subnet-125"]
 }
 
-variable "cert_dir" {
-  default = "certs"
-}
-
-variable "domain" {
-  default = "daas.kloia"
-}
 variable "tag_name" {
   default = "test"
 }
 
 variable "aws_region" {
-  default = "eu-west-1"
+  default = "eu-north-1"
 }
 
 variable "dns_servers" {
@@ -39,10 +29,11 @@ variable "is_split_tunnel" {
   default = true
 }
 
-variable "is_access_internet" {
-  default = true
-}
-
 variable "auth_type" {
   default = "certificate-authentication"
+}
+
+
+variable "enable_logs" {
+  default = true
 }

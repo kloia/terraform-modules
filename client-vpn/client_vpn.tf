@@ -1,18 +1,13 @@
 resource "aws_acm_certificate" "client_cert" {
-  private_key       = "${file("${path.root}/${var.cert_dir}/${var.client}.${var.domain}.key")}"
-  certificate_body  = "${file("${path.root}/${var.cert_dir}/${var.client}.${var.domain}.crt")}"
-  certificate_chain = "${file("${path.root}/${var.cert_dir}/ca.crt")}"
+  private_key       = "${file("${path.root}/${var.vpn_addr}/${var.vpn_addr}.key")}"
+  certificate_body  = "${file("${path.root}/${var.vpn_addr}/${var.vpn_addr}.crt")}"
+  certificate_chain = "${file("${path.root}/${var.vpn_addr}/ca.crt")}"
 }
 
-resource "aws_acm_certificate" "server_cert" {
-  private_key       = "${file("${path.root}/${var.cert_dir}/server.key")}"
-  certificate_body  = "${file("${path.root}/${var.cert_dir}/server.crt")}"
-  certificate_chain = "${file("${path.root}/${var.cert_dir}/ca.crt")}"
-}
 
 resource "aws_ec2_client_vpn_endpoint" "client_vpn_endpoint" {
   description            = "${var.tag_name}-clientvpn-endpoint"
-  server_certificate_arn = "${aws_acm_certificate.server_cert.arn}"
+  server_certificate_arn = "${aws_acm_certificate.client_cert.arn}"
   client_cidr_block      = "${var.client_cidr_block}"
   split_tunnel           = "${var.is_split_tunnel}"
   authentication_options {
@@ -22,7 +17,9 @@ resource "aws_ec2_client_vpn_endpoint" "client_vpn_endpoint" {
   dns_servers = "${var.dns_servers}"
 
   connection_log_options {
-    enabled = false
+    enabled = "${var.enable_logs}"
+    cloudwatch_log_group  = "${aws_cloudwatch_log_group.client_vpn_log_group.name}"
+    cloudwatch_log_stream = "${aws_cloudwatch_log_stream.client_vpn_log_stream.name}"
   }
 
   tags = {
@@ -47,12 +44,6 @@ resource "null_resource" "authorize-client-vpn-ingress" {
     "aws_ec2_client_vpn_network_association.client_vpn_network_association",
   ]
 }
-resource "null_resource" "append_client_config_certs" {
-  provisioner "local-exec" {
-    command = "${path.module}/scripts/append_cert_to_config.sh ${path.root} ${var.cert_dir} ${var.domain}"
-  }
-}
-
 resource "aws_cloudwatch_log_group" "client_vpn_log_group" {
   name = "${var.tag_name}-client_vpn_log_group"
 
@@ -67,16 +58,15 @@ resource "aws_cloudwatch_log_stream" "client_vpn_log_stream" {
 }
 
 resource "null_resource" "client_vpn_route_internet" {
-  count = "${var.is_access_internet == true ?  "${length("${var.subnet_list}")}" : 0}"
-
-
+  count = "${var.is_split_tunnel == false ?  "${length("${var.subnet_list}")}" : 0}"
+ 
   provisioner "local-exec" {
     when    = "create"
-    command = "aws ec2 create-client-vpn-route --client-vpn-endpoint-id ${aws_ec2_client_vpn_endpoint.client_vpn_endpoint.id} --destination-cidr-block 0.0.0.0/0 --target-vpc-subnet-id ${var.subnet_list[count.index]} --description Internet-Access"
+    command = "aws ec2 create-client-vpn-route --client-vpn-endpoint-id ${aws_ec2_client_vpn_endpoint.client_vpn_endpoint.id} --destination-cidr-block 0.0.0.0/0 --target-vpc-subnet-id ${var.subnet_list[count.index]} --description Internet-Access  --region ${var.aws_region}"
   }
 
   provisioner "local-exec" {
     when    = "destroy"
-    command = "aws ec2 delete-client-vpn-route --client-vpn-endpoint-id ${aws_ec2_client_vpn_endpoint.client_vpn_endpoint.id} --destination-cidr-block 0.0.0.0/0 --target-vpc-subnet-id ${var.subnet_list[count.index]}"
+    command = "aws ec2 delete-client-vpn-route --client-vpn-endpoint-id ${aws_ec2_client_vpn_endpoint.client_vpn_endpoint.id} --destination-cidr-block 0.0.0.0/0 --target-vpc-subnet-id ${var.subnet_list[count.index]}  --region ${var.aws_region}"
   }
 }
