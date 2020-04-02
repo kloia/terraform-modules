@@ -37,3 +37,7 @@ variable "auth_type" {
 variable "enable_logs" {
   default = true
 }
+
+variable "vpn_addr" {
+  default = "kloia-vpn"  
+}
