@@ -70,3 +70,7 @@ variable "vpc_public_subnet_cidrs" {
 variable "final_snapshot_identifier" {
   
 }
+
+variable "cluster_count" {
+  default = 1
+}

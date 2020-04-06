@@ -1,5 +1,7 @@
 resource "aws_docdb_cluster" "docdb_cluster" {
   cluster_identifier      = "${var.cluster_name}"
+  count                   = "${var.cluster_count}"
+
   engine                  = "docdb"
   port                    = "${var.port}"
   master_username         = "${var.master_username}"
