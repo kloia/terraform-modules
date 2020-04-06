@@ -69,6 +69,3 @@ resource "aws_security_group" "docdb_cluster_sg" {
 }
 
 # Output
-output "cluster_endpoint" {
-  value = "${aws_docdb_cluster.docdb_cluster.endpoint}"
-}
