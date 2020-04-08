@@ -30,56 +30,25 @@ resource "aws_ec2_client_vpn_endpoint" "client_vpn_endpoint" {
 
 resource "aws_ec2_client_vpn_network_association" "client_vpn_network_association_az_0" {
   client_vpn_endpoint_id = "${aws_ec2_client_vpn_endpoint.client_vpn_endpoint.id}"
-  subnet_id              = "${var.az_subnet_0}"
+  subnet_id              = "${var.subnet_list[0]}"
   lifecycle {
-    ignore_changes = "subnet_id" # I don't know why it tries to change this every time
+    ignore_changes = "subnet_id"
   }
 }
 
 resource "aws_ec2_client_vpn_network_association" "client_vpn_network_association_az_1" {
   client_vpn_endpoint_id = "${aws_ec2_client_vpn_endpoint.client_vpn_endpoint.id}"
-  subnet_id              = "${var.az_subnet_1}"
-
+  subnet_id              = "${var.subnet_list[1]}"
   lifecycle {
-    ignore_changes = "subnet_id" # I don't know why it tries to change this every time
+    ignore_changes = "subnet_id"
   }
 }
 
 resource "aws_ec2_client_vpn_network_association" "client_vpn_network_association_az_2" {
   client_vpn_endpoint_id = "${aws_ec2_client_vpn_endpoint.client_vpn_endpoint.id}"
-  subnet_id              = "${var.az_subnet_2}"
+  subnet_id              = "${var.subnet_list[2]}"
   lifecycle {
-    ignore_changes = "subnet_id" # I don't know why it tries to change this every time
-  }
-}
-
-
-
-resource "aws_cloudwatch_log_group" "client_vpn_log_group" {
-  name = "${var.tag_name}-client_vpn_log_group"
-
-  tags = {
-    Environment = "${var.tag_environment}"
-  }
-}
-
-resource "aws_cloudwatch_log_stream" "client_vpn_log_stream" {
-  name           = "${var.tag_name}_client_vpn_log_stream"
-  log_group_name = "${aws_cloudwatch_log_group.client_vpn_log_group.name}"
-}
-
-/*
-
-resource "null_resource" "client_vpn_route_internet" {
-  count = "${var.is_split_tunnel == false ?  "${length("${var.subnet_list}")}" : 0}"
-  provisioner "local-exec" {
-    when    = "create"
-    command = "aws ec2 create-client-vpn-route --client-vpn-endpoint-id ${aws_ec2_client_vpn_endpoint.client_vpn_endpoint.id} --destination-cidr-block 0.0.0.0/0 --target-vpc-subnet-id ${var.subnet_list[count.index]} --description Internet-Access  --region ${var.aws_region}"
-  }
-
-  provisioner "local-exec" {
-    when    = "destroy"
-    command = "aws ec2 delete-client-vpn-route --client-vpn-endpoint-id ${aws_ec2_client_vpn_endpoint.client_vpn_endpoint.id} --destination-cidr-block 0.0.0.0/0 --target-vpc-subnet-id ${var.subnet_list[count.index]}  --region ${var.aws_region}"
+    ignore_changes = "subnet_id"
   }
 }
 
@@ -96,4 +65,29 @@ resource "null_resource" "authorize-client-vpn-ingress" {
     "aws_ec2_client_vpn_network_association.client_vpn_network_association_az_2",
 
   ]
-}*/
+}
+resource "aws_cloudwatch_log_group" "client_vpn_log_group" {
+  name = "${var.tag_name}-client_vpn_log_group"
+
+  tags = {
+    Environment = "${var.tag_environment}"
+  }
+}
+
+resource "aws_cloudwatch_log_stream" "client_vpn_log_stream" {
+  name           = "${var.tag_name}_client_vpn_log_stream"
+  log_group_name = "${aws_cloudwatch_log_group.client_vpn_log_group.name}"
+}
+
+resource "null_resource" "client_vpn_route_internet" {
+  count = "${var.is_split_tunnel == false ?  "${length("${var.subnet_list}")}" : 0}"
+  provisioner "local-exec" {
+    when    = "create"
+    command = "aws ec2 create-client-vpn-route --client-vpn-endpoint-id ${aws_ec2_client_vpn_endpoint.client_vpn_endpoint.id} --destination-cidr-block 0.0.0.0/0 --target-vpc-subnet-id ${var.subnet_list[count.index]} --description Internet-Access  --region ${var.aws_region}"
+  }
+
+  provisioner "local-exec" {
+    when    = "destroy"
+    command = "aws ec2 delete-client-vpn-route --client-vpn-endpoint-id ${aws_ec2_client_vpn_endpoint.client_vpn_endpoint.id} --destination-cidr-block 0.0.0.0/0 --target-vpc-subnet-id ${var.subnet_list[count.index]}  --region ${var.aws_region}"
+  }
+}
