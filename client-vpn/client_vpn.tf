@@ -31,16 +31,26 @@ resource "aws_ec2_client_vpn_endpoint" "client_vpn_endpoint" {
 resource "aws_ec2_client_vpn_network_association" "client_vpn_network_association_az_0" {
   client_vpn_endpoint_id = "${aws_ec2_client_vpn_endpoint.client_vpn_endpoint.id}"
   subnet_id              = "${var.az_subnet_0}"
+  lifecycle {
+    ignore_changes = "subnet_id" # I don't know why it tries to change this every time
+  }
 }
 
 resource "aws_ec2_client_vpn_network_association" "client_vpn_network_association_az_1" {
   client_vpn_endpoint_id = "${aws_ec2_client_vpn_endpoint.client_vpn_endpoint.id}"
   subnet_id              = "${var.az_subnet_1}"
+
+  lifecycle {
+    ignore_changes = "subnet_id" # I don't know why it tries to change this every time
+  }
 }
 
 resource "aws_ec2_client_vpn_network_association" "client_vpn_network_association_az_2" {
   client_vpn_endpoint_id = "${aws_ec2_client_vpn_endpoint.client_vpn_endpoint.id}"
   subnet_id              = "${var.az_subnet_2}"
+  lifecycle {
+    ignore_changes = "subnet_id" # I don't know why it tries to change this every time
+  }
 }
 
 
