@@ -44,6 +44,7 @@ resource "aws_ec2_client_vpn_network_association" "client_vpn_network_associatio
 }
 
 
+/*
 resource "null_resource" "authorize-client-vpn-ingress" {
   provisioner "local-exec" {
     command = "aws --region ${var.aws_region} ec2 authorize-client-vpn-ingress --client-vpn-endpoint-id ${aws_ec2_client_vpn_endpoint.client_vpn_endpoint.id} --target-network-cidr 0.0.0.0/0 --authorize-all-groups"
@@ -56,7 +57,8 @@ resource "null_resource" "authorize-client-vpn-ingress" {
     "aws_ec2_client_vpn_network_association.client_vpn_network_association_az_2",
 
   ]
-}
+}*/
+
 resource "aws_cloudwatch_log_group" "client_vpn_log_group" {
   name = "${var.tag_name}-client_vpn_log_group"
 
