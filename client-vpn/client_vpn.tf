@@ -28,17 +28,17 @@ resource "aws_ec2_client_vpn_endpoint" "client_vpn_endpoint" {
   }
 }
 
-resource "aws_ec2_client_vpn_network_association" "client_vpn_network_association_az_1" {
+resource "aws_ec2_client_vpn_network_association" "client_vpn_network_association_az_0" {
   client_vpn_endpoint_id = "${aws_ec2_client_vpn_endpoint.client_vpn_endpoint.id}"
   subnet_id              = "${var.subnet_list[0]}"
 }
 
-resource "aws_ec2_client_vpn_network_association" "client_vpn_network_association_az_2" {
+resource "aws_ec2_client_vpn_network_association" "client_vpn_network_association_az_1" {
   client_vpn_endpoint_id = "${aws_ec2_client_vpn_endpoint.client_vpn_endpoint.id}"
   subnet_id              = "${var.subnet_list[1]}"
 }
 
-resource "aws_ec2_client_vpn_network_association" "client_vpn_network_association_az_3" {
+resource "aws_ec2_client_vpn_network_association" "client_vpn_network_association_az_2" {
   client_vpn_endpoint_id = "${aws_ec2_client_vpn_endpoint.client_vpn_endpoint.id}"
   subnet_id              = "${var.subnet_list[2]}"
 }
@@ -51,7 +51,10 @@ resource "null_resource" "authorize-client-vpn-ingress" {
 
   depends_on = [
     "aws_ec2_client_vpn_endpoint.client_vpn_endpoint",
-    "aws_ec2_client_vpn_network_association.client_vpn_network_association",
+    "aws_ec2_client_vpn_network_association.client_vpn_network_association_az_0",
+    "aws_ec2_client_vpn_network_association.client_vpn_network_association_az_1",
+    "aws_ec2_client_vpn_network_association.client_vpn_network_association_az_2",
+
   ]
 }
 resource "aws_cloudwatch_log_group" "client_vpn_log_group" {
