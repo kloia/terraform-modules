@@ -41,14 +41,3 @@ variable "enable_logs" {
 variable "vpn_addr" {
   default = "kloia-vpn"  
 }
-
-
-variable "az_subnet_0" {
-  
-}
-variable "az_subnet_1" {
-  
-}
-variable "az_subnet_2" {
-  
-}
