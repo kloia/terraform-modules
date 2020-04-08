@@ -41,3 +41,7 @@ variable "enable_logs" {
 variable "vpn_addr" {
   default = "kloia-vpn"  
 }
+
+variable "is_internet_access" {
+  default = true
+}
