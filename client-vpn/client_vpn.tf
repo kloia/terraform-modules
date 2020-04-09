@@ -80,7 +80,7 @@ resource "aws_cloudwatch_log_stream" "client_vpn_log_stream" {
 }
 
 resource "null_resource" "client_vpn_route_internet" {
-  count = "${var.is_internet_access == true ?  "${length("${var.subnet_list}")}" : 0}"
+  count = "${length("${var.subnet_list}")}"
   provisioner "local-exec" {
     when    = "create"
     command = "aws ec2 create-client-vpn-route --client-vpn-endpoint-id ${aws_ec2_client_vpn_endpoint.client_vpn_endpoint.id} --destination-cidr-block 0.0.0.0/0 --target-vpc-subnet-id ${var.subnet_list[count.index]} --description Internet-Access  --region ${var.aws_region}"
