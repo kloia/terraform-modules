@@ -47,6 +47,7 @@ resource "aws_security_group" "docdb_cluster_sg" {
   vpc_id      = "${var.vpc_id}"
 
   ingress {
+
     protocol    = "TCP"
     from_port   = "${var.port}"
     to_port     = "${var.port}"    
@@ -54,6 +55,7 @@ resource "aws_security_group" "docdb_cluster_sg" {
       "${var.vpc_private_subnet_cidrs}",
       "${var.vpc_public_subnet_cidrs}"  
     ]
+
   }
 
   egress {
