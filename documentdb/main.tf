@@ -53,7 +53,8 @@ resource "aws_security_group" "docdb_cluster_sg" {
     to_port     = "${var.port}"    
     cidr_blocks = [
       "${var.vpc_private_subnet_cidrs}",
-      "${var.vpc_public_subnet_cidrs}"  
+      "${var.vpc_public_subnet_cidrs}", 
+      "${var.custom_cidr_block}"
     ]
 
   }
