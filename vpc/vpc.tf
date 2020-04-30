@@ -15,7 +15,6 @@ resource "aws_vpc" "my_vpc" {
 }
 
 ### SUBNETS
-
 locals {
   vpc_id = "${aws_vpc.my_vpc.id}"
 }
@@ -86,13 +85,6 @@ resource "aws_eip" "vpc_eip" {
 }
  resource "aws_route_table" "public" { ### Public
   vpc_id                  = "${local.vpc_id}"
-
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = "${aws_internet_gateway.gw.id}"
-  }
-  
-
     tags {
           Name = "${var.tag_project}-public"
           Deployment = "${var.tag_deployment}"
@@ -102,8 +94,6 @@ resource "aws_eip" "vpc_eip" {
           DeploymentCode =  "${var.tag_deployment_code}"
 
   }
-
-
 }
 
 
@@ -111,6 +101,14 @@ resource "aws_route" "public_internet_gateway" {
   route_table_id         = "${aws_route_table.public.id}"
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = "${aws_internet_gateway.gw.id}"
+
+}
+
+
+resource "aws_route" "nat_gateway" {
+  route_table_id         = "${aws_route_table.private.id}"
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = "${aws_nat_gateway.vpc_nat.id}"
 
 }
 
@@ -150,11 +148,6 @@ resource "aws_route_table" "private" {
           Project = "${var.tag_project}"
           DeploymentCode =  "${var.tag_deployment_code}"
 
-  }
-
-  route {
-    cidr_block = "0.0.0.0/0"
-    nat_gateway_id = "${aws_nat_gateway.vpc_nat.id}"
   }
 
 }
