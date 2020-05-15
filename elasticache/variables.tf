@@ -6,7 +6,7 @@ variable "node_type" {
   default = "cache.m4.large"
 }
 
-variable "cache_node_count" {
+variable "num_node_groups" {
   default = 2
 }
 
@@ -78,4 +78,17 @@ variable "at_rest_encrypt" {
   default = "true"
   type    = "string"
 
+}
+
+variable "cache_cluster" {
+  default = 1
+}
+
+
+variable "replica_node_count" {
+  default = 3
+}
+
+variable "node_group_count" {
+  default =1 
 }
