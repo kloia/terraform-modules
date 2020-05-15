@@ -1,7 +1,7 @@
 
 resource "aws_elasticache_replication_group" "example" {
   automatic_failover_enabled    = "${var.automatic_failover}"
-  availability_zones            = "${var.availability_zones}"
+  availability_zones            = ["${var.availability_zones}"]
   replication_group_id          = "${var.tag_environment}-1"
   replication_group_description = "${var.tag_project} ${var.tag_environment} replication group redis "
   node_type                     = "${var.node_type}"
@@ -19,6 +19,7 @@ resource "aws_elasticache_replication_group" "example" {
   snapshot_retention_limit      = "${var.snapshot_retention_limit}"
   at_rest_encryption_enabled    = "${var.at_rest_encrypt}"
   transit_encryption_enabled    = "${var.transit_encrypt}"
+
 }
 
 
@@ -30,7 +31,7 @@ resource "aws_elasticache_parameter_group" "redis" {
 
 resource "aws_elasticache_subnet_group" "subnet_group" {
   name       = "${var.cluster_name}-${var.engine}-${var.tag_environment}-subnet-group"
-  subnet_ids = "${var.private_subnet_list}"
+  subnet_ids = ["${var.private_subnet_list}"]
 }
 
 resource "aws_security_group_rule" "elasticache_redis_sec_rule" {
