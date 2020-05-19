@@ -39,12 +39,6 @@ variable "rds_subnet_group_id" {
   
 }
 
-
-
-variable "profile" {
-  
-}
-
 variable "auto_pause" {
   default = true
 }
@@ -82,3 +76,25 @@ variable "backup_ret_period" {
 variable "final_snapshot_identifier" {
   default = ""
 }
+
+
+variable "backup_window" {
+  default = "03:00-07:00"
+}
+
+variable "organization" {
+  
+}
+
+variable "is_data_api_enabled" {
+  
+}
+
+variable "parameter_group" {
+  
+}
+
+variable "db_identifier" {
+
+}
+
