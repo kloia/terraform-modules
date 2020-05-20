@@ -26,7 +26,7 @@ resource "aws_rds_cluster" "rds_cluster" {
   }
 
   tags = {
-    Name = "${upper(var.tag_project)} RDS Cluster ${var.organization}"
+    Name = "${var.db_identifier}"
   }
 }
 
