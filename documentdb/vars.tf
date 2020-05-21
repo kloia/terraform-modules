@@ -71,6 +71,8 @@ variable "cluster_count" {
 }
 
 variable "custom_cidr_block" {
+
   type = "list"
   default = []
+  
 }

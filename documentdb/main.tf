@@ -19,6 +19,7 @@ resource "aws_docdb_cluster" "docdb_cluster" {
   }
 }
 
+
 resource "aws_docdb_cluster_instance" "docdb_cluster_instances" {
   count              = "${var.instance_count}"
 
