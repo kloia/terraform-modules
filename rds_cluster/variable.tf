@@ -98,3 +98,10 @@ variable "db_identifier" {
 
 }
 
+variable "maintenance_window" {
+  default = "Mon:03:00-Mon:04:00"
+}
+
+variable "copy_tags_snapshot" {
+  default = true
+}

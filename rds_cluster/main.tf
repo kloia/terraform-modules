@@ -9,14 +9,15 @@ resource "aws_rds_cluster" "rds_cluster" {
   storage_encrypted               = "${var.encrypted}"
   db_cluster_parameter_group_name = "${var.parameter_group}"
   backup_retention_period   = "${var.backup_ret_period}" # days
-  preferred_backup_window   = "${var.backup_window}"
   apply_immediately         = "${var.apply_immediately}"
   skip_final_snapshot       = "${var.skip_final_snapshot}"
   final_snapshot_identifier = "${var.final_snapshot_identifier}"
   db_subnet_group_name      = "${var.rds_subnet_group_id}" //aws_db_subnet_group id
   vpc_security_group_ids    = ["${var.vpc_security_group_id}"] //vpc_security_group_id
   enable_http_endpoint      = "${var.is_data_api_enabled}"
-
+  preferred_maintenance_window        = "${var.maintenance_window}"
+  preferred_backup_window             = "${var.backup_window}"
+  copy_tags_to_snapshot               = "${var.copy_tags_snapshot}"
   scaling_configuration {
     auto_pause               = "${var.auto_pause}"
     max_capacity             = "${var.max_capacity}"
