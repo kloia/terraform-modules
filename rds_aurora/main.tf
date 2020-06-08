@@ -52,8 +52,6 @@ resource "aws_rds_cluster_instance" "this" {
   db_parameter_group_name         = "${var.db_parameter_group_name}"
   preferred_maintenance_window    = "${var.preferred_maintenance_window}"
   apply_immediately               = "${var.apply_immediately}"
-  monitoring_role_arn             = "${aws_iam_role.rds_enhanced_monitoring.arn}"
-  monitoring_interval             = "${var.monitoring_interval}"
   auto_minor_version_upgrade      = "${var.auto_minor_version_upgrade}"
   performance_insights_enabled    = "${var.performance_insights_enabled}"
   performance_insights_kms_key_id = "${var.performance_insights_kms_key_id}"
@@ -73,22 +71,6 @@ data "aws_iam_policy_document" "monitoring_rds_assume_role" {
   }
 }
 
-resource "aws_iam_role" "rds_enhanced_monitoring" {
-
-  name               = "rds-enhanced-monitoring-${var.name}"
-  assume_role_policy = "${data.aws_iam_policy_document.monitoring_rds_assume_role.json}"
-}
-
-resource "aws_iam_role_policy_attachment" "rds_enhanced_monitoring" {
-
-  role       = "rds-enhanced-monitoring-${var.name}"
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole"
-}
-
-
-locals {
-  rds_enhanced_monitoring_name = "mymonitoring"
-}
 
 resource "aws_security_group" "this" {
 
