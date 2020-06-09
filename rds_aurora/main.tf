@@ -92,6 +92,6 @@ resource "aws_security_group_rule" "cidr_ingress" {
   from_port         = "${aws_rds_cluster.rds_cluster.port}"
   to_port           = "${aws_rds_cluster.rds_cluster.port}"
   protocol          = "tcp"
-  cidr_blocks       = "${var.allowed_cidr_blocks}"
+  cidr_blocks       = ["${var.allowed_cidr_blocks}"]
   security_group_id = "${aws_security_group.this.id}"
 }
