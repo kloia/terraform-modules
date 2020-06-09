@@ -28,9 +28,6 @@ resource "aws_vpc_peering_connection_accepter" "accepter" {
   vpc_peering_connection_id = aws_vpc_peering_connection.owner.id
   auto_accept               = true
 
-  tags = {
-    Name = "peer_to_${var.owner_profile}"
-  }
 }
 
 data "aws_vpc" "owner" {
