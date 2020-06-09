@@ -20,3 +20,7 @@ variable "accepter_vpc_id" {
   description = "Accepter VPC Id"
 }
 
+variable "enable_accepter_route_modification" {
+  description = "wheter to enable or not accepter route modifications."
+  type        = bool
+}

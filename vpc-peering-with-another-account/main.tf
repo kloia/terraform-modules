@@ -28,9 +28,6 @@ resource "aws_vpc_peering_connection_accepter" "accepter" {
   vpc_peering_connection_id = aws_vpc_peering_connection.owner.id
   auto_accept               = true
 
-  tags = {
-    Name = "peer_to_${var.owner_profile}"
-  }
 }
 
 data "aws_vpc" "owner" {
@@ -56,7 +53,7 @@ resource "aws_route" "owner" {
 
 resource "aws_route" "accepter" {
   provider                  = aws.accepter
-  count                     = length(data.aws_route_tables.accepter.ids)
+  count                     = var.enable_accepter_route_modification ? length(data.aws_route_tables.accepter.ids) : 0
   route_table_id            = element(data.aws_route_tables.accepter.ids[*], count.index)
   destination_cidr_block    = data.aws_vpc.owner.cidr_block
   vpc_peering_connection_id = aws_vpc_peering_connection.owner.id
