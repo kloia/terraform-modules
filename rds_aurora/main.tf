@@ -1,5 +1,5 @@
 resource "aws_db_subnet_group" "subnet_group" {
-  name        = "${var.name}-subnet-group"
+  name        = "${var.name}-${var.environment}-aurora-subnet-group"
   description = "${var.environment} Aurora Rds Subnet Group"
   subnet_ids  = ["${var.subnets}"]
 
