@@ -1,4 +1,5 @@
 resource "aws_rds_cluster" "rds_cluster" {
+  
   cluster_identifier = "${var.organization}-serverless-${var.db_identifier}"
   engine             = "${var.engine}"
   engine_version     = "${var.engine_version}"
@@ -9,6 +10,7 @@ resource "aws_rds_cluster" "rds_cluster" {
   storage_encrypted               = "${var.encrypted}"
   db_cluster_parameter_group_name = "${var.parameter_group}"
   backup_retention_period   = "${var.backup_ret_period}" # days
+  kms_key_id                = "${var.kms_key_id}"
   apply_immediately         = "${var.apply_immediately}"
   skip_final_snapshot       = "${var.skip_final_snapshot}"
   final_snapshot_identifier = "${var.final_snapshot_identifier}"

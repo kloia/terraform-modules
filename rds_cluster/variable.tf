@@ -87,7 +87,7 @@ variable "organization" {
 }
 
 variable "is_data_api_enabled" {
-  
+  default = true
 }
 
 variable "parameter_group" {
@@ -104,4 +104,10 @@ variable "maintenance_window" {
 
 variable "copy_tags_snapshot" {
   default = true
+}
+
+variable "kms_key_id" {
+  description = "The ARN for the KMS encryption key if one is set to the cluster."
+  type        = "string"
+  default     = ""
 }
