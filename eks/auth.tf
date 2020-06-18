@@ -47,5 +47,6 @@ resource "kubernetes_config_map" "aws_auth_configmap" {
 ${join("", concat(data.template_file.node_group_arns.*.rendered))}
 %{if length(var.map_roles) != 0}${yamlencode(var.map_roles)}%{endif}
     EOF
+    mapUsers = yamlencode(var.map_users)
   }
 }
