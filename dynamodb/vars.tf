@@ -4,12 +4,6 @@ variable "name" {
   description = "Name  (e.g. `app` or `cluster`)"
 }
 
-variable "attributes" {
-  type        = "list"
-  default     = []
-  description = "Additional attributes (e.g. `policy` or `role`)"
-}
-
 variable "billing_mode" {
   type        = "string"
   default     = "PROVISIONED"
@@ -37,10 +31,4 @@ variable "range_key_type" {
   type        = "string"
   default     = "S"
   description = "Range Key type, which must be a scalar type: `S`, `N`, or `B` for (S)tring, (N)umber or (B)inary data"
-}
-
-variable "dynamodb_attributes" {
-  type        = "list"
-  default     = []
-  description = "Additional DynamoDB attributes in the form of a list of mapped values"
 }
