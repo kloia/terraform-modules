@@ -1,7 +1,5 @@
 provider "aws" {
   alias = "accepter"
-  region  = var.peering_accepter_region
-  profile = var.peering_accepter_profile
 }
 
 data "aws_vpc" "accepter" {
@@ -19,7 +17,7 @@ resource "aws_vpc_peering_connection" "owner" {
   peer_owner_id = local.accepter_account_id
 
   tags = {
-    Name = "peer_to_${var.peering_accepter_profile}"
+    Name = "peer_to_${var.owner_vpc_id}"
   }
 }
 
