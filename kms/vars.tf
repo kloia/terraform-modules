@@ -27,3 +27,7 @@ variable "policy" {
 variable "alias_name" {
   
 }
+
+variable "rotation" {
+    default = true
+}
