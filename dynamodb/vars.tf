@@ -1,4 +1,3 @@
-
 variable "name" {
   type        = "string"
   description = "Name  (e.g. `app` or `cluster`)"
@@ -6,7 +5,7 @@ variable "name" {
 
 variable "billing_mode" {
   type        = "string"
-  default     = "PROVISIONED"
+  default     = "PAY_PER_REQUEST"
   description = "DynamoDB Billing mode. Can be PROVISIONED or PAY_PER_REQUEST"
 }
 
@@ -31,4 +30,32 @@ variable "range_key_type" {
   type        = "string"
   default     = "S"
   description = "Range Key type, which must be a scalar type: `S`, `N`, or `B` for (S)tring, (N)umber or (B)inary data"
+}
+
+
+variable "read_capacity" {
+  type = "string"
+  default = 5
+  description = "(optional) describe your variable"
+}
+
+variable "write_capacity" {
+  type = "string"
+  default = 5
+  description = "(optional) describe your variable"
+}
+variable "replication_region" {
+  type = "string"
+  default = ""
+  description = "Region for disaster recovery capablities, for global table "
+}
+variable "is_stream_enabled" {
+  type = "string"
+  default = true
+}
+
+variable "stream_view_type" {
+  type = "string"
+  description = "Type for dynamodb stream"
+  default = "NEW_AND_OLD_IMAGES"
 }

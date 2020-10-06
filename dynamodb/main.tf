@@ -13,10 +13,16 @@ locals {
 
 resource "aws_dynamodb_table" "default" {
   name             = "${var.name}"
-  billing_mode     = "${var.billing_mode}"
   hash_key         = "${var.hash_key}"
   range_key        = "${var.range_key}"
+  billing_mode     = "${var.billing_mode}"
   attribute        = ["${local.attributes}"]
+  stream_enabled = "${var.is_stream_enabled}"
+  stream_view_type = "${var.stream_view_type}"
+
+  replica {
+    region_name    = "${var.replication_region}"
+  }
 
   tags {
     Name = "${var.name}"
